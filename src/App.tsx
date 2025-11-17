@@ -1,17 +1,24 @@
+import { useState } from 'react'
+import type { ComponentType } from 'react'
 import './App.css'
+import StudyPlanView from './views/StudyPlanView'
+
+type ViewId = 'study-plan'
+
+type ViewRegistry = Record<ViewId, ComponentType>
+
+const viewComponents: ViewRegistry = {
+  'study-plan': StudyPlanView,
+}
 
 function App() {
+  const [activeView] = useState<ViewId>('study-plan')
+  const ActiveView = viewComponents[activeView]
+
   return (
-    <main className="app">
-      <section className="app__content">
-        <h1>React + TypeScript</h1>
-        <p>
-          This project has been reset to a clean starting point so you can build any React application you
-          like.
-        </p>
-        <p>Update <code>src/App.tsx</code> and start creating!</p>
-      </section>
-    </main>
+    <div className="app">
+      <ActiveView />
+    </div>
   )
 }
 
