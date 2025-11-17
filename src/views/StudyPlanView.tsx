@@ -11,11 +11,14 @@ export type StudyPlanViewProps = {
 
 const steps: StudyPlanStep[] = [
   { id: 'science-and-technology', title: 'Science and Technology' },
-  { id: 'step-2', title: 'Step 2' },
-  { id: 'step-3', title: 'Step 3' },
-  { id: 'step-4', title: 'Step 4' },
-  { id: 'step-5', title: 'Step 5' },
-  { id: 'step-6', title: 'Step 6' },
+  { id: 'environment', title: 'Environment' },
+  { id: 'history', title: 'History' },
+  { id: 'career', title: 'Career' },
+  { id: 'literature', title: 'Literature' },
+  { id: 'education', title: 'Education' },
+  { id: 'society', title: 'Society' },
+  { id: 'culture', title: 'Culture' },
+  { id: 'media', title: 'Media' },
 ]
 
 const baseY = 80
