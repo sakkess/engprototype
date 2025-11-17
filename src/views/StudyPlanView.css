@@ -73,6 +73,13 @@
   letter-spacing: 0.12em;
 }
 
+.study-plan__header p {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1rem, 3vw, 1.1rem);
+  letter-spacing: 0.02em;
+  color: rgba(5, 33, 23, 0.85);
+}
+
 .study-plan__path {
   width: min(760px, 94%);
   margin: 0 auto;

@@ -34,7 +34,22 @@ const StudyPlanView = ({ onStepSelect }: StudyPlanViewProps) => {
 
   const pathHeight = baseY * 2 + verticalSpacing * (steps.length - 1)
 
-  const pathD = stonePositions.reduce((acc, point, index, arr) => {
+  const sideOffset = 12
+
+  const pathPoints = stonePositions.map((point, index) => {
+    const isLastStep = index === stonePositions.length - 1
+    const isLeftColumn = point.left < 50
+    const adjustedLeft = isLastStep
+      ? point.left
+      : Math.min(95, Math.max(5, point.left + (isLeftColumn ? sideOffset : -sideOffset)))
+
+    return {
+      left: adjustedLeft,
+      top: point.top,
+    }
+  })
+
+  const pathD = pathPoints.reduce((acc, point, index, arr) => {
     if (index === 0) {
       return `M ${point.left} ${point.top}`
     }
@@ -54,7 +69,8 @@ const StudyPlanView = ({ onStepSelect }: StudyPlanViewProps) => {
     <main className="study-plan" aria-label="Study plan">
       <div className="study-plan__scroll">
         <header className="study-plan__header">
-          <h1>Study Plan</h1>
+          <h1>Vocabulary Boost</h1>
+          <p>Grow your vocabulary for the English matriculation exam!</p>
         </header>
         <div className="study-plan__path" style={{ height: `${pathHeight}px` }}>
           <svg className="study-plan__line" viewBox={`0 0 100 ${pathHeight}`} preserveAspectRatio="none" role="presentation">
