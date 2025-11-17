@@ -23,7 +23,7 @@ const steps: StudyPlanStep[] = [
 
 const baseY = 80
 const verticalSpacing = 180
-const leftPositions = [28, 72]
+const leftPositions = [22, 78]
 
 const StudyPlanView = ({ onStepSelect }: StudyPlanViewProps) => {
   const stonePositions = steps.map((step, index) => ({
@@ -32,9 +32,11 @@ const StudyPlanView = ({ onStepSelect }: StudyPlanViewProps) => {
     top: baseY + index * verticalSpacing,
   }))
 
-  const pathHeight = baseY * 2 + verticalSpacing * (steps.length - 1)
+  const lastStoneTop = stonePositions[stonePositions.length - 1]?.top ?? baseY
+  const pathEndPadding = 120
+  const pathHeight = lastStoneTop + pathEndPadding
 
-  const sideOffset = 12
+  const sideOffset = 22
 
   const pathPoints = stonePositions.map((point, index) => {
     const isLastStep = index === stonePositions.length - 1
@@ -48,6 +50,14 @@ const StudyPlanView = ({ onStepSelect }: StudyPlanViewProps) => {
       top: point.top,
     }
   })
+
+  if (pathPoints.length > 0) {
+    const lastPoint = pathPoints[pathPoints.length - 1]
+    pathPoints.push({
+      left: lastPoint.left,
+      top: lastPoint.top + pathEndPadding / 2,
+    })
+  }
 
   const pathD = pathPoints.reduce((acc, point, index, arr) => {
     if (index === 0) {
