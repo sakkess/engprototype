@@ -1,11 +1,15 @@
 import { useMemo, useState } from 'react'
+import MissionView from './views/MissionView'
+import ReadingView from './views/ReadingView'
+import CompleteView from './views/CompleteView'
+import type { Chapter, Stage, Vocabulary } from './types'
 import './App.css'
 
-const chapter = {
+const chapter: Chapter = {
   name: 'Science and Technology',
   missionHeading: 'Vocabulary Boost',
   missionDescription:
-    'Read the text, and click each word you are unfamiliar with. We\'ll find new important words to add to your vocabulary.',
+    "Read the text, and click each word you are unfamiliar with. We'll find new important words to add to your vocabulary.",
   steps: [
     {
       id: 'step-1',
@@ -22,9 +26,10 @@ const chapter = {
   ],
 }
 
-type Stage = 'mission' | 'reading' | 'complete'
+const tokenizeText = (text: string) =>
+  text.match(/([A-Za-z']+|[^A-Za-z'\s]+|\s+)/g) ?? [text]
 
-type Vocabulary = Record<string, string>
+const normalizeWord = (word: string) => word.toLowerCase().replace(/[^a-z']/g, '')
 
 const vocabulary: Vocabulary = {
   a: 'yksi',
@@ -222,11 +227,6 @@ const vocabulary: Vocabulary = {
   year: 'vuosi',
 }
 
-const tokenizeText = (text: string) =>
-  text.match(/([A-Za-z']+|[^A-Za-z'\s]+|\s+)/g) ?? [text]
-
-const normalizeWord = (word: string) => word.toLowerCase().replace(/[^a-z']/g, '')
-
 function App() {
   const [stage, setStage] = useState<Stage>('mission')
   const [stepIndex, setStepIndex] = useState(0)
@@ -296,7 +296,7 @@ function App() {
     [stage, currentStep.text],
   )
 
-const stageLabel = stage === 'reading' ? 'Guided Reading' : stage === 'complete' ? 'Ready for Practice' : null
+  const stageLabel = stage === 'reading' ? 'Guided Reading' : stage === 'complete' ? 'Ready for Practice' : null
 
   return (
     <div className="app-shell">
@@ -304,79 +304,33 @@ const stageLabel = stage === 'reading' ? 'Guided Reading' : stage === 'complete'
         <header className="chapter-header">{stageLabel && <h1>{stageLabel}</h1>}</header>
 
         {stage === 'mission' && (
-          <section className="mission-panel" aria-live="polite">
-            <p className="mission-heading">
-              {chapter.missionHeading}: {chapter.name}
-            </p>
-            <p className="mission-text">{chapter.missionDescription}</p>
-          </section>
+          <MissionView
+            name={chapter.name}
+            missionHeading={chapter.missionHeading}
+            missionDescription={chapter.missionDescription}
+          />
         )}
 
         {stage === 'reading' && (
-          <section className="reading-panel" aria-live="polite">
-            <div className="reading-meta">
-              <p className="step-label">Step {stepIndex + 1} of {chapter.steps.length}</p>
-              <p className="word-count">Marked words: {markedCount}</p>
-            </div>
-
-            <div className="reading-instructions">
-              <p>Click every word you want to review. You can select up to 10 before the next activity begins.</p>
-            </div>
-
-            <article className="reading-text" aria-label={`Reading step ${stepIndex + 1}`}>
-              {readingTokens.map((token, index) => {
-                if (/^[A-Za-z']+$/.test(token)) {
-                  const normalized = normalizeWord(token)
-                  const isMarked = markedWords.has(normalized)
-                  const translation = vocabulary[normalized]
-
-                  return (
-                    <button
-                      key={`${token}-${index}`}
-                      type="button"
-                      className={`word-token ${isMarked ? 'is-selected' : ''}`}
-                      onClick={() => handleWordToggle(token)}
-                    >
-                      <span>{token}</span>
-                      {isMarked && (
-                        <span className="word-translation">{translation ?? '—'}</span>
-                      )}
-                    </button>
-                  )
-                }
-
-                if (/^\s+$/.test(token)) {
-                  return <span key={`space-${index}`}>{token}</span>
-                }
-
-                return (
-                  <span key={`char-${index}`} className="punctuation">
-                    {token}
-                  </span>
-                )
-              })}
-            </article>
-          </section>
+          <ReadingView
+            stepIndex={stepIndex}
+            stepCount={chapter.steps.length}
+            markedCount={markedCount}
+            tokens={readingTokens}
+            markedWords={markedWords}
+            vocabulary={vocabulary}
+            onWordToggle={handleWordToggle}
+            normalizeWord={normalizeWord}
+          />
         )}
 
         {stage === 'complete' && (
-          <section className="complete-panel" aria-live="polite">
-            <h2>Great work!</h2>
-            <p>
-              You marked <strong>{markedCount}</strong> words for {chapter.name}. Continue to the next
-              activity or restart this flow to review the text again.
-            </p>
-            {markedCount > 0 && (
-              <ul className="marked-list">
-                {Array.from(markedWords).map((word) => (
-                  <li key={word}>
-                    <span>{word}</span>
-                    <span className="marked-translation">{vocabulary[word]}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
+          <CompleteView
+            chapterName={chapter.name}
+            markedCount={markedCount}
+            markedWords={markedWords}
+            vocabulary={vocabulary}
+          />
         )}
 
         <footer className="flow-controls">
