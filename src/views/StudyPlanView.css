@@ -1,0 +1,111 @@
+.study-plan {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e2f6d7 0%, #c4e7ba 40%, #9fcf97 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+  color: #1b3615;
+}
+
+.study-plan::before,
+.study-plan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.25) 0, transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.18) 0, transparent 50%);
+  pointer-events: none;
+}
+
+.study-plan::after {
+  background-image: radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.1) 0, transparent 35%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.15) 0, transparent 35%);
+  opacity: 0.7;
+}
+
+.study-plan__scroll {
+  height: 100vh;
+  overflow-y: auto;
+  padding: clamp(2rem, 5vw, 4rem) 1.5rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.study-plan__header {
+  text-align: center;
+  color: #0f3315;
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+}
+
+.study-plan__header h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  margin: 0.25rem 0 0.5rem;
+}
+
+.study-plan__path {
+  width: min(720px, 94%);
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 4rem;
+}
+
+.study-plan__line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.study-plan__line path {
+  fill: none;
+  stroke: rgba(33, 57, 35, 0.5);
+  stroke-width: 2.5;
+  stroke-dasharray: 12 12;
+  stroke-linecap: round;
+}
+
+.study-plan__step {
+  position: absolute;
+  transform: translateX(-50%);
+  width: clamp(200px, 40vw, 280px);
+  padding: 1.4rem 1.5rem;
+  border: none;
+  border-radius: 42% 58% 60% 40% / 55% 45% 62% 38%;
+  background: #565b60;
+  box-shadow: inset 3px 3px 5px rgba(255, 255, 255, 0.15), inset -8px -8px 14px rgba(0, 0, 0, 0.35),
+    0 18px 24px rgba(17, 25, 17, 0.35);
+  color: #f7f8fa;
+  font-size: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  position: relative;
+}
+
+.study-plan__step:hover,
+.study-plan__step:focus-visible {
+  transform: translateX(-50%) translateY(-4px) scale(1.02);
+  box-shadow: inset 4px 4px 8px rgba(255, 255, 255, 0.2), inset -10px -10px 15px rgba(0, 0, 0, 0.4),
+    0 28px 36px rgba(17, 25, 17, 0.45);
+  outline: none;
+}
+
+.study-plan__step-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .study-plan__step {
+    left: 50% !important;
+  }
+
+  .study-plan__line path {
+    stroke-dasharray: 10 8;
+  }
+}
